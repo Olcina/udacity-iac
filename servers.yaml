@@ -55,8 +55,8 @@ Resources:
           apt-get install apache2 -y
           systemctl start apache2.service
           cd /var/www/html
-          aws s3 cp s3://udacity-demo-1/udacity.zip .
-          unzip -o udacity.zip
+          aws s3 cp s3://udacity-iac-carlos/testwebpage.zip .
+          unzip -o testwebpage.zip
       ImageId: ami-0b418580298265d5c
       IamInstanceProfile: arn:aws:iam::796793879054:instance-profile/udacity-iac
       KeyName: udacity-iac
