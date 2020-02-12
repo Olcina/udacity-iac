@@ -31,8 +31,8 @@ Resources:
           !Sub "${EnvironmentName}-VPCID"
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: 8080
-          ToPort: 8080
+          FromPort: 80
+          ToPort: 80
           CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
           FromPort: 22
@@ -58,6 +58,8 @@ Resources:
           aws s3 cp s3://udacity-demo-1/udacity.zip .
           unzip -o udacity.zip
       ImageId: ami-0b418580298265d5c
+      IamInstanceProfile: arn:aws:iam::796793879054:instance-profile/udacity-iac
+      KeyName: udacity-iac
       SecurityGroups:
       - Ref: WebServerSecGroup
       InstanceType: t2.micro
@@ -72,11 +74,11 @@ Resources:
       LaunchConfigurationName: !Ref WebAppLaunchConfig
       TargetGroupARNs: 
         - Ref: WebAppTargetGroup
-      MaxSize: '3'
+      MaxSize: '5'
       MinSize: '2'
       VPCZoneIdentifier: 
-        - Fn::ImportValue:
-            !Sub "${EnvironmentName}-PRIV-NETS"
+      - Fn::ImportValue:
+          !Sub "${EnvironmentName}-PRIV-NETS"
 
   WebAppLB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
@@ -117,9 +119,12 @@ Resources:
       HealthCheckProtocol: HTTP
       HealthCheckTimeoutSeconds: 8
       HealthyThresholdCount: 2
-      Port: 8080
+      Port: 80
       Protocol: HTTP
       UnhealthyThresholdCount: 5
       VpcId:
         Fn::ImportValue:
           !Sub "${EnvironmentName}-VPCID"
+
+  CodeContainer:
+    Type: AWS::S3::Bucket
