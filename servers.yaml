@@ -59,10 +59,9 @@ Resources:
           unzip -o testwebpage.zip
       ImageId: ami-0b418580298265d5c
       IamInstanceProfile: arn:aws:iam::796793879054:instance-profile/udacity-iac
-      KeyName: udacity-iac
       SecurityGroups:
       - Ref: WebServerSecGroup
-      InstanceType: t2.micro
+      InstanceType: t3.small
       BlockDeviceMappings:
       - DeviceName: "/dev/sdk"
         Ebs:
@@ -126,5 +125,10 @@ Resources:
         Fn::ImportValue:
           !Sub "${EnvironmentName}-VPCID"
 
-  CodeContainer:
-    Type: AWS::S3::Bucket
+
+Outputs:
+    VPC:
+        Description: The url for accesing the service
+        Value: !GetAtt WebAppLB.DNSName
+        Export: 
+            Name: !Sub ${EnvironmentName}-WebAppDNS
